@@ -1,47 +1,33 @@
+## Load the libraries
 library(xts)
+
+## Lubridate provides the as.yearqrt function
+## to convert dates to quarter of the year
 library(lubridate)
-?lubridate
 
-start(AirPassengers)
-end(AirPassengers)
+## The values of the series
+values <- c(10, 15, 17, 12, 13, 17, 20, 15, 15, 20, 21)
 
-dates <- seq.Date(as.Date('1949-01-01'), as.Date('1960-12-01'), by = 'month')
-timeIndex <- as.yearmon(dates)
+## The values are observed for each quarter from 2018 Q1 to 2020 Q4
+## seq.dates creates a sequence of dates starting from
+## the 1st of January 2018
+## The length.out argument instructs it to create a sequence with
+## length equal to the number of elements in "values"
 
-AP <- xts(coredata(AirPassengers), order.by = timeIndex)
+dates <- seq.Date(
+  as.Date('2018-01-01'), 
+  length.out = length(values),
+  by = 'quarter'
+)
+## Print the dates object and look at its content
 
-summary(AP)
+## Now we create the time index for the series.
+timeIndex <- as.yearqtr(dates)
 
-plot(AP, ylab = 'Passengers (1000\'s)')
+## This creates the xts object
+series <- xts(values, order.by = timeIndex)
 
-boxplot(coredata(AP) ~ cycle(AP))
-trend <- decompose(as.ts(AP))$trend
-trendXts <- xts(trend, order.by = index(AP))
-trend
-plot(AP, ylab = 'Passengers (1000\'s)')
-lines(trendXts, lty = 2)
-plot(trend, lty = 2)
+## Examine the plot of the data
+plot(series)
 
-
-
-series <- c(10, 15, 17, 12, 13, 17, 20, 15, 15, 20, 21, 17)
-timeIndexSeries <- seq.Date(as.Date('2018-01-01'), length.out = length(series), by = 'quarter')
-timeIndexSeries
-as.yearqtr(timeIndexSeries)
-s <- xts(series, order.by = as.yearqtr(timeIndexSeries))
-str(s)
-
-
-
-
-trend <- decompose(as.ts(s))$trend
-frequency(s)
-
-(0.5 * 15 + 17 + 12 + 13 + 17 * 0.5) / 4
-?xts
-
-12 - 13.875
-
-plot(AP)
-plot(trend, lty = 4)
 
