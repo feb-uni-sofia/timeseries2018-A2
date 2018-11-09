@@ -5,8 +5,9 @@ library(xts)
 ## to convert dates to quarter of the year
 library(lubridate)
 
+# a)
 ## The values of the series
-values <- c(10, 15, 17, 12, 13, 17, 20, 15, 15, 20, 21)
+values <- c(10, 15, 17, 12, 13, 17, 20, 15, 15, 20, 21, 17)
 
 ## The values are observed for each quarter from 2018 Q1 to 2020 Q4
 ## seq.dates creates a sequence of dates starting from
@@ -27,7 +28,23 @@ timeIndex <- as.yearqtr(dates)
 ## This creates the xts object
 series <- xts(values, order.by = timeIndex)
 
-## Examine the plot of the data
+#b)
 plot(series)
 
+# c)
+## Compute the two centered moving averages "by hand"
 
+m3 <- (0.5 * 10 + 15 + 17 + 12 + 0.5 * 13) / 4
+## or alternatively
+
+(mean(series[1:4]) + mean(series[2:5])) / 2
+
+m4 <- (0.5 * 15 + 17 + 12 + 13 + 0.5 * 17) / 4
+## or alternatively 
+(mean(series[2:5]) + mean(series[3:6])) / 2
+
+## Compute the whole moving average series by using decompose
+
+decomp <- decompose(as.ts(series))
+## The result of the moving average smoothing is available
+## under $trend 
